@@ -7,6 +7,7 @@
       class="form-control"
       :required="required != ''"
       @invalid="onInvalid"
+      @reset="clearError"
     >
     <div class="errors text-danger mt-1  align-self-start d-none"></div>
   </div>
@@ -19,6 +20,10 @@ import { ref, Ref, onMounted } from 'vue';
 const onInvalid = () => {
   console.log(`invalid called for ID=${props.id}`);
   updateErrorBlock(false);
+}
+
+const clearError = (evt: Event) => {
+  console.log("got called");
 }
 
 const props = withDefaults(defineProps<{

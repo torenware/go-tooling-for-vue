@@ -24,6 +24,21 @@ onMounted(() => {
     const form = btn.form as HTMLFormElement;
     processSubmit(form);
   });
+
+  const reset = ourForm.querySelector("#reset-form") as HTMLFormElement;
+  reset.addEventListener("click", () => {
+    reset.form.reset();
+    const elems = reset.form.querySelectorAll("input, select, textarea");
+    elems.forEach((elem: Element) => {
+      const parent = elem.parentElement;
+      const block = parent?.querySelector("div.errors") as HTMLElement;
+      if (!block.classList.contains("d-none")) {
+        block.classList.add("d-none");
+      }
+      block.innerText = "";
+    });
+  });
+
 });
 
 const form: Ref<HTMLFormElement | null> = ref(null)
@@ -40,9 +55,12 @@ const form: Ref<HTMLFormElement | null> = ref(null)
   >
     <BaseInput label="Email" id="test-id" inputType="email" required="true"/>
     <BaseInput label="Password" id="test-pw" inputType="password" required="true" />
-    <button id="submitter" class="btn btn-primary mt-3 ms-3 me-auto">
-      Submit Me!
-    </button>
+    <div class="d-flex justify-content-start">
+      <button id="submitter" class="btn btn-primary mt-3 ms-3">
+        Submit Me!
+      </button>
+      <button id="reset-form" class="btn btn-secondary mt-3 ms-3 me-auto">Reset</button>
+    </div>
   </form>
 </div>
 </template>
