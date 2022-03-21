@@ -1,4 +1,9 @@
-import { createApp } from 'vue'
-import App from './App.vue'
+import { createApp } from 'vue';
+import App from './App.vue';
 
-createApp(App).mount('#app')
+const mountPoint = '#app';
+const mount = document.querySelector(mountPoint);
+const ep = mount?.getAttribute('data-entryp');
+console.log(ep ? `ep = ${ep}` : 'no ep');
+
+createApp(App).mount(mountPoint);
