@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang='en'>
+{{ $vue := index .Data "vueGlue" }}
+    <head>
+        <meta charset='utf-8'>
+        <title>Home - Vue Loader Test</title>
+        {{ if $vue }}
+            <script type="module" crossorigin src="{{ $vue.MainModule }}"></script>
+            <link rel="modulepreload" href="{{ $vue.VendorModule }}">
+            <link rel="stylesheet" href="{{$vue.CSSModule}}">
+
+        {{end }}
+    </head>
+    <body>
+        <header>
+            <h1><a href='/'>Snippetbox</a></h1>
+        </header>
+        <nav>
+            <a href="/">Home</a>
+        </nav>
+        <main>
+            <h2>Latest Snippets</h2>
+            <p>There's nothing to see here yet!</p>
+
+            {{ if $vue }}
+            <div id="app">
+            </div>
+            {{ end }}
+        </main>
+    </body>
+</html>
