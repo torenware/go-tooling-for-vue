@@ -12,7 +12,6 @@
       class="form-control"
       :required="required != ''"
       @invalid="onInvalid"
-      @reset="clearError"
     >
     <input
       v-else
@@ -21,7 +20,6 @@
       class="form-check ms-3 pb-2"
       :required="required != ''"
       @invalid="onInvalid"
-      @reset="clearError"
     >
     <label
         v-if="inputType === 'checkbox'"
@@ -35,15 +33,11 @@
 <script setup lang="ts" >
 import { ref, Ref, onMounted, computed } from 'vue';
 
-// type ReportValueFunction = (elem: HTMLElement) => string | number;
 const onInvalid = () => {
-  console.log(`invalid called for ID=${props.id}`);
+  // console.log(`invalid called for ID=${props.id}`);
   updateErrorBlock(false);
 }
 
-const clearError = (evt: Event) => {
-  console.log("got called");
-}
 
 const props = withDefaults(defineProps<{
       label: string,

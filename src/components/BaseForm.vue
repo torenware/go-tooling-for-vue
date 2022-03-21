@@ -46,8 +46,18 @@ const processSubmit = (form: HTMLFormElement) => {
   // First check validity
   if (form.reportValidity()) {
     const elems = form.querySelectorAll("input, select, textarea");
-    elems.forEach((elem: Element) => {
-      values[elem.id] = (elem as FormControl).value
+    elems.forEach((elem) => {
+      if (elem.tagName === 'INPUT') {
+        const input = elem as HTMLInputElement;
+        if (input.type === "radio") {
+          values[input.name] = input.value;
+          return;
+        }
+      }
+      // anything else
+      if (elem.id) {
+        values[elem.id] = (elem as FormControl).value
+      }
     });
     props.process(values);
   }
@@ -72,10 +82,13 @@ onMounted(() => {
     elems.forEach((elem: Element) => {
       const parent = elem.parentElement;
       const block = parent?.querySelector("div.errors") as HTMLElement;
-      if (!block.classList.contains("d-none")) {
-        block.classList.add("d-none");
+      if (block) {
+        // groups will not have their own error block.
+        if (!block.classList.contains("d-none")) {
+          block.classList.add("d-none");
+        }
+        block.innerText = "";
       }
-      block.innerText = "";
     });
   });
 
