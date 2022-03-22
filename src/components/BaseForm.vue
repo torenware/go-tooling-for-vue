@@ -22,11 +22,16 @@
 <script setup lang="ts">
 import { ref, Ref, onMounted } from 'vue'
 
+enum FieldSetState {
+  REQUIRED_MISSING = -1
+}
+
 type JSPO = {
   [key: string]: string | number
 }
 
-type ProcessSubmitFunc = (obj: JSPO) => void
+type ProcessSubmitFunc = (obj: JSPO) => void;
+type GatherValueFunc = (form: HTMLFormElement) => JSPO;
 
 const props = withDefaults(defineProps<{
   process?: ProcessSubmitFunc
@@ -40,16 +45,70 @@ const props = withDefaults(defineProps<{
 
 type FormControl = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
 
+const validateRadioGroups = (form: HTMLFormElement) => {
+  const values = checkRadioGroups(form);
+  // We assume that our structure is similar for fieldsets as it is
+  // for other control types.
+  let valid = true; // optimism.
+
+  for (let fsID of Object.keys(values)) {
+    if (values[fsID] === FieldSetState.REQUIRED_MISSING) {
+      const fs = document.getElementById(fsID);
+      const errDiv = fs?.querySelector("div.errors");
+      if (errDiv) {
+        const block = errDiv as HTMLDivElement;
+        if (block.classList.contains("d-none")) {
+          block.classList.remove("d-none");
+        }
+        block.textContent = "At least one radio button must be selected."
+        valid = false;
+      }
+    }
+  }
+  return valid;
+}
+
+const checkRadioGroups: GatherValueFunc = (form: HTMLFormElement) => {
+  // We require that radio buttons be inside a fieldset.
+  const fsets = form.querySelectorAll("fieldset");
+  let values: JSPO = {};
+  fsets.forEach(fs => {
+    const isRequired = fs.getAttribute("required");
+    const fsID: string | number = fs.id;
+    values[fsID] = "" // assume no value
+
+    if (isRequired && isRequired.length) {
+      // ID is required
+      if (!fsID) {
+        throw "required fieldset *must* have an ID";
+      }
+      const inputs = fs.querySelectorAll("input[type=radio]");
+      inputs.forEach(elem => {
+        const radio = elem as HTMLInputElement;
+        if (radio.checked) {
+          values[fsID] = radio.value;
+        }
+      });
+      // If the value for this ID is still unchanged,
+      // we are empty where a value is required.
+      if (values[fsID] === "") {
+        values[fsID] = FieldSetState.REQUIRED_MISSING;
+      }
+    };
+  });
+  return values;
+}
+
 const processSubmit = (form: HTMLFormElement) => {
   const values: JSPO = {};
 
   // First check validity
-  if (form.reportValidity()) {
+  if (form.reportValidity() && validateRadioGroups(form)) {
     const elems = form.querySelectorAll("input, select, textarea");
     elems.forEach((elem) => {
       if (elem.tagName === 'INPUT') {
         const input = elem as HTMLInputElement;
-        if (input.type === "radio") {
+        if (input.type === "radio" && input.checked) {
           values[input.name] = input.value;
           return;
         }
@@ -59,6 +118,7 @@ const processSubmit = (form: HTMLFormElement) => {
         values[elem.id] = (elem as FormControl).value
       }
     });
+
     props.process(values);
   }
 }
@@ -80,7 +140,16 @@ onMounted(() => {
 
     const elems = reset.form.querySelectorAll("input, select, textarea");
     elems.forEach((elem: Element) => {
-      const parent = elem.parentElement;
+
+      let parent = elem.parentElement;
+      // radio button groups are one level more nested.
+      if (elem.tagName.toLowerCase() === "input") {
+        const input = elem as HTMLInputElement;
+        if (input.type.toLowerCase() === "radio") {
+          parent = (parent as HTMLElement).parentElement;
+        }
+      }
+
       const block = parent?.querySelector("div.errors") as HTMLElement;
       if (block) {
         // groups will not have their own error block.

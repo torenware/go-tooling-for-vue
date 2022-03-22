@@ -33,7 +33,7 @@ function processForm(obj: JSOB) {
     <BaseInput label="Email" id="email" inputType="email" required="true"/>
     <BaseInput label="Password" id="password" inputType="password" required="true" />
     <BaseInput label="Agree To Licence" id="license" inputType="checkbox"></BaseInput>
-    <BaseRadioGroup :radios="rg" id="lone-radio" name="station" />
+    <BaseRadioGroup :radios="rg" id="lone-radio" name="station" required="true"/>
 
   </BaseForm>
   </div>
