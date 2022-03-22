@@ -27,7 +27,7 @@ This is a work in progress, but I may write this one up for fun and such.
 
 Copyright © 2022 Rob Thorne
 
-[MIT License](https://github.com/torenware/git-tooling-for-vue/blob/8999977a5bffb8f0630740220c576b550a7115e9/LICENSE.md)
+[MIT License](https://github.com/torenware/go-tooling-for-vue/blob/8999977a5bffb8f0630740220c576b550a7115e9/LICENSE.md)
 <hr>
 
 ## Vue 3 + Typescript + Vite
