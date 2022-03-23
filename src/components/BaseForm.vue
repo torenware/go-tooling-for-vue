@@ -152,7 +152,6 @@ onMounted(() => {
 
       const block = parent?.querySelector("div.errors") as HTMLElement;
       if (block) {
-        // groups will not have their own error block.
         if (!block.classList.contains("d-none")) {
           block.classList.add("d-none");
         }

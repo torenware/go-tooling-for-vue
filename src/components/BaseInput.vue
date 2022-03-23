@@ -11,6 +11,7 @@
       :type="inputType"
       class="form-control"
       :required="required != ''"
+      :value="value"
       @invalid="onInvalid"
     >
     <input
@@ -19,6 +20,7 @@
       :type="inputType"
       class="form-check ms-3 pb-2"
       :required="required != ''"
+      :value="value"
       @invalid="onInvalid"
     >
     <label
@@ -44,6 +46,7 @@ const props = withDefaults(defineProps<{
       id: string,
       required?: string,
       inputType?: string,
+      value?: string,
     }>(), {
   inputType: "text"
 });

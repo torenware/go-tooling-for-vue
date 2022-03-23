@@ -4,9 +4,9 @@ import BaseForm from './BaseForm.vue';
 //import BaseRadio from './BaseRadio.vue';
 import BaseRadioGroup from './BaseRadioGroup.vue';
 
-import {ref} from 'vue';
+// import {ref} from 'vue';
 
-const rg = ref([
+const rg = [
   {
     label: "first of one",
     value: "wgbg"
@@ -15,7 +15,7 @@ const rg = ref([
     label: "el segundo",
     value: "wmex"
   }
-]);
+];
 
 type JSOB = {
   [key: string]: string | number
@@ -28,14 +28,18 @@ function processForm(obj: JSOB) {
 </script>
 
 <template>
-<div class="container">
-  <BaseForm :process="processForm">
-    <BaseInput label="Email" id="email" inputType="email" required="true"/>
-    <BaseInput label="Password" id="password" inputType="password" required="true" />
-    <BaseInput label="Agree To Licence" id="license" inputType="checkbox"></BaseInput>
-    <BaseRadioGroup :radios="rg" id="lone-radio" name="station" required="true"/>
-
-  </BaseForm>
+  <div class="container">
+    <BaseForm :process="processForm">
+      <BaseInput label="Email" id="email" inputType="email" required="true" />
+      <BaseInput label="Password" id="password" inputType="password" required="true" />
+      <BaseInput
+        label="Agree To Licence"
+        id="license"
+        value="agreed-to-licence"
+        inputType="checkbox"
+      ></BaseInput>
+      <BaseRadioGroup :radios="rg" id="lone-radio" name="station" required="true" />
+    </BaseForm>
   </div>
 </template>
 
