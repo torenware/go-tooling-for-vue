@@ -14,7 +14,7 @@ import (
 	// "github.com/vearutop/statigz/brotli"
 )
 
-//go:embed dist/assets
+//go:embed dist
 var dist embed.FS
 
 type config struct {
