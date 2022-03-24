@@ -6,9 +6,12 @@
         <title>Home - Vue Loader Test</title>
         {{ if $vue }}
             <script type="module" crossorigin src="{{ $vue.MainModule }}"></script>
-            <link rel="modulepreload" href="{{ $vue.VendorModule }}">
-            <link rel="stylesheet" href="{{$vue.CSSModule}}">
-
+            {{ range $vue.Imports }}
+               <link rel="modulepreload" href="{{.}}">
+            {{ end }}
+            {{ range $vue.CSSModule }}
+              <link rel="stylesheet" href="{{.}}">
+            {{ end }}
         {{end }}
     </head>
     <body>
@@ -23,7 +26,7 @@
             <p>There's nothing to see here yet!</p>
 
             {{ if $vue }}
-            <div id="app" data-entryp="login">
+            <div id="app" data-entryp="app">
             </div>
             {{ end }}
         </main>
