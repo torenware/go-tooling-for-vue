@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"io/fs"
-	"log"
 	"reflect"
 	"strconv"
 )
@@ -17,10 +16,23 @@ const (
 )
 
 type VueGlue struct {
+
+	// Entry point for JS
 	MainModule string
-	Imports    []string
-	CSSModule  []string
-	DistFS     *embed.FS
+
+	// JS Dependencies / Vendor libs
+	Imports []string
+
+	// Bundled CSS
+	CSSModule []string
+
+	// I use a 'data-entryp' attribute to find what
+	// components to load. Lookup is in src/main.ts.
+	MountPoint string
+
+	// An embed that points to the Vue/Vite dist
+	// directory.
+	DistFS *embed.FS
 }
 
 type ManifestNode struct {
@@ -157,20 +169,15 @@ func (m *ManifestTarget) processInterface(leaf *ManifestNode, indent, k string, 
 	}
 }
 
-type ManifestMaps map[string]interface{}
-
 func NewVueGlue(dist *embed.FS) (*VueGlue, error) {
 
 	if !fs.ValidPath(AssetsDir) {
 		return nil, errors.New("vite dist directory not found")
 	}
 
-	dir, err := dist.ReadDir(".")
+	_, err := dist.ReadDir(".")
 	if err != nil {
 		return nil, errors.New("could not read dir")
-	}
-	for _, entry := range dir {
-		log.Println(entry.Name())
 	}
 
 	// Get the manifest file

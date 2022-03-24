@@ -20,8 +20,7 @@ This test build does the following:
 
 * The Vue app is a non-trivial demo of a Vue 3 form with client side validation.
 
-
-This is a work in progress, but I may write this one up for fun and such.
+Much obliged to Máximo Mussini (@maximomussini on Twitter), rubist and Vite expert, for his help. I now understand, more or less, how Vite configuration works and how to integrate Vue into frameworks like Rails.  This demo uses an approach inspired by Vite Ruby, a library Máximo designed.
 
 --Rob Thorne
 
@@ -36,7 +35,7 @@ This template should help get you started developing with Vue 3 and Typescript i
 
 ### Recommended IDE Setup
 
-- [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
+* [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
 
 ### Type Support For `.vue` Imports in TS
 

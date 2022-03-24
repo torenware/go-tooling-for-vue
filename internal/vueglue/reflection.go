@@ -7,6 +7,11 @@ import (
 	"strings"
 )
 
+// Not currently using this file, since I found a simpler way to parse
+// arbitrary JSON that won't work with json.Unmarshal. But if I
+// need to use golang reflection again, at least I have this to
+// look back on.
+
 // From gopl book
 func Display(name string, x interface{}) {
 	fmt.Printf("Display %s (%T):\n", name, x)
