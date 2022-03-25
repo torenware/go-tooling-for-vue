@@ -10,6 +10,11 @@ work with the old Vue 3 build system, but since [Evan You of Vue.js fame](https:
 to write himself the new [Vite build system](https://vitejs.dev/) and loader, I thought it might
 be a good time to try this again.
 
+The actual vue glue code has been separated into a go module, which is
+extremely new. It's marked as "pre-release" because it is: the code is
+proof of concept, may not be safe, may eat your dog or other family
+members. But it works with the test program in this repo.
+
 This test build does the following:
 
 * I have a simple Go-based web server with a couple of pages implemented.

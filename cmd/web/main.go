@@ -9,7 +9,7 @@ import (
 	"os"
 	"time"
 
-	vueglue "torenware/vite-go"
+	vueglue "github.com/torenware/vite-go"
 	// "github.com/vearutop/statigz"
 	// "github.com/vearutop/statigz/brotli"
 )
