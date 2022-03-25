@@ -23,7 +23,7 @@ func (app *application) addDefaultTData(td *templateData) *templateData {
 	}
 
 	if app.vueDist != nil {
-		td.Data["vueGlue"] = app.ViteGlue
+		td.Data["vueGlue"] = app.VueGlue
 	}
 	return td
 }

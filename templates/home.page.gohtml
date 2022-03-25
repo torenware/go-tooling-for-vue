@@ -5,14 +5,8 @@
         <meta charset='utf-8'>
         <title>Home - Vue Loader Test</title>
         {{ if $vue }}
-            <script type="module" crossorigin src="{{ $vue.MainModule }}"></script>
-            {{ range $vue.Imports }}
-               <link rel="modulepreload" href="{{.}}">
-            {{ end }}
-            {{ range $vue.CSSModule }}
-              <link rel="stylesheet" href="{{.}}">
-            {{ end }}
-        {{end }}
+          {{ $vue.RenderTags }}
+        {{ end }}
     </head>
     <body>
       <div class="container">

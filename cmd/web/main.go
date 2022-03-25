@@ -24,7 +24,7 @@ type config struct {
 
 type application struct {
 	config   config
-	ViteGlue *vueglue.VueGlue
+	VueGlue  *vueglue.VueGlue
 	vueDist  *embed.FS
 	infoLog  *log.Logger
 	errorLog *log.Logger
@@ -60,20 +60,14 @@ func main() {
 	// support vue fields in templates.
 	gob.Register(vueglue.VueGlue{})
 
-	// s, err := fs.Sub(dist, "dist")
-	// if err != nil {
-	// 	fmt.Println("sub failed")
-	// 	return
-	// }
-
-	glue, err := vueglue.NewVueGlue(&dist)
+	glue, err := vueglue.NewVueGlue(&dist, "dist")
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
 	var appl application
-	appl.ViteGlue = glue
+	appl.VueGlue = glue
 	infoLogger := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errorLogger := log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 

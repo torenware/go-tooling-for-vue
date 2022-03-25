@@ -1,11 +1,10 @@
 package vueglue
 
 import (
-	"embed"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io/fs"
+	"path/filepath"
 	"reflect"
 	"strconv"
 )
@@ -32,7 +31,7 @@ type VueGlue struct {
 
 	// An embed that points to the Vue/Vite dist
 	// directory.
-	DistFS *embed.FS
+	DistFS fs.ReadFileFS
 }
 
 type ManifestNode struct {
@@ -85,25 +84,26 @@ func (m *ManifestTarget) parseWithoutReflection(jsonData []byte) (*VueGlue, erro
 		}
 	}
 	if entry == nil {
-		return nil, errors.New("manifest lacked entry point")
+		return nil, ErrNoEntryPoint
 	}
 
 	imports := entry.subKey("imports")
 	if imports == nil || len(imports.Children) == 0 {
-		return nil, errors.New("expected code to have js dependencies")
-	}
-
-	for _, child := range imports.Children {
-		// these have a level of indirection for some reason
-		deref := topNode.subKey(child.Value.String())
-		if deref == nil {
-			return nil, errors.New("expected details for import")
+		// return nil, errors.New("expected code to have js dependencies")
+		// turns out this will become optional as of Vite 2.9, so:
+	} else {
+		for _, child := range imports.Children {
+			// these have a level of indirection for some reason
+			deref := topNode.subKey(child.Value.String())
+			if deref == nil {
+				return nil, ErrNoInputFile
+			}
+			item := deref.subKey("file")
+			if item == nil {
+				return nil, ErrManifestBadlyFormed
+			}
+			glue.Imports = append(glue.Imports, item.Value.String())
 		}
-		item := deref.subKey("file")
-		if item == nil {
-			return nil, errors.New("expected path for import")
-		}
-		glue.Imports = append(glue.Imports, item.Value.String())
 	}
 
 	css := entry.subKey("css")
@@ -144,50 +144,48 @@ func (m *ManifestTarget) siftCollections(leaf *ManifestNode, indent, key string,
 
 // call this for recurisve structures.
 func (m *ManifestTarget) processInterface(leaf *ManifestNode, indent, k string, v interface{}) {
-
+	// Cover types we know we get in JSON
 	switch v := v.(type) {
 	case string:
 		leaf.Type = reflect.String
 		leaf.Value = reflect.ValueOf(v)
-		fmt.Println(indent, k, "=", v, "(string)")
 	case float64:
 		leaf.Type = reflect.Float64
 		leaf.Value = reflect.ValueOf(v)
-		fmt.Println(indent, k, "=", v, "(float64)")
 	case bool:
 		leaf.Type = reflect.Bool
 		leaf.Value = reflect.ValueOf(v)
-		fmt.Println(indent, k, "=", v, "(bool)")
 	case []interface{}:
-		fmt.Println(indent, k, "=", "(array):")
 		m.siftCollections(leaf, indent+"    ", k, v)
 	case map[string]interface{}:
-		fmt.Println(indent, k, "=", "(map):")
 		m.siftCollections(leaf, indent+"    ", k, v)
 	default:
 		fmt.Printf("%s %s ?? %T (unknown)", indent, k, v)
 	}
 }
 
-func NewVueGlue(dist *embed.FS) (*VueGlue, error) {
-
-	if !fs.ValidPath(AssetsDir) {
-		return nil, errors.New("vite dist directory not found")
-	}
-
-	_, err := dist.ReadDir(".")
-	if err != nil {
-		return nil, errors.New("could not read dir")
-	}
-
-	// Get the manifest file
-	contents, err := dist.ReadFile("dist/manifest.json")
+func ParseManifest(contents []byte) (*VueGlue, error) {
+	var testRslt ManifestTarget
+	glue, err := testRslt.parseWithoutReflection(contents)
 	if err != nil {
 		return nil, err
 	}
+	return glue, nil
+}
 
-	var testRslt ManifestTarget
-	glue, err := testRslt.parseWithoutReflection(contents)
+func NewVueGlue(dist fs.ReadFileFS, pathToDist string) (*VueGlue, error) {
+
+	if !fs.ValidPath(pathToDist) {
+		return nil, ErrManifestDNF
+	}
+
+	// Get the manifest file
+	manifestFile := filepath.Join(pathToDist, "manifest.json")
+	contents, err := dist.ReadFile(manifestFile)
+	if err != nil {
+		return nil, err
+	}
+	glue, err := ParseManifest(contents)
 	if err != nil {
 		return nil, err
 	}
@@ -195,6 +193,13 @@ func NewVueGlue(dist *embed.FS) (*VueGlue, error) {
 
 	output, _ := json.MarshalIndent(glue, "", "  ")
 	fmt.Println(string(output))
+
+	tags, err := glue.RenderTags()
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	fmt.Println(tags)
 
 	return glue, nil
 
