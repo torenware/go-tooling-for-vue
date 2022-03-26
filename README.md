@@ -13,7 +13,8 @@ be a good time to try this again.
 The actual vue glue code has been separated into a go module, which is
 extremely new. It's marked as "pre-release" because it is: the code is
 proof of concept, may not be safe, may eat your dog or other family
-members. But it works with the test program in this repo.
+members. But it works with the test program in this repo. See it
+[here](https://github.com/torenware/vite-go).
 
 This test build does the following:
 
