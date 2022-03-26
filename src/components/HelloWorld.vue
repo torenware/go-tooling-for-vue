@@ -38,7 +38,13 @@ function processForm(obj: JSOB) {
         value="agreed-to-licence"
         inputType="checkbox"
       ></BaseInput>
-      <BaseRadioGroup :radios="rg" id="lone-radio" name="station" required="true" />
+      <BaseRadioGroup
+        :radios="rg"
+        id="lone-radio"
+        legend="Radio Stations"
+        name="station"
+        required="true"
+      />
     </BaseForm>
   </div>
 </template>

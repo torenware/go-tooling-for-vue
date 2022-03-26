@@ -1,20 +1,20 @@
 <template>
-<fieldset :id="id" :required="required" class="d-flex flex-column" ref="fsref">
-  <BaseRadio
-    v-for="radio in radios"
-    :name="name"
-    :value="radio.value"
-    :label="radio.label"
-    :key="name + '-' + radio.value"
-  />
+  <fieldset :id="id" :required="required" class="d-flex flex-column" ref="fsref">
+    <legend v-if="legend">{{ legend }}</legend>
+    <BaseRadio
+      v-for="radio in radios"
+      :name="name"
+      :value="radio.value"
+      :label="radio.label"
+      :key="name + '-' + radio.value"
+    />
 
-  <div class="errors text-danger mt-1 ms-2 pb-1  align-self-start d-none"></div>
-
-</fieldset>
+    <div class="errors text-danger mt-1 ms-2 pb-1 align-self-start d-none"></div>
+  </fieldset>
 </template>
 
 <script setup lang="ts">
-import {ref, Ref, onMounted} from 'vue';
+import { ref, Ref, onMounted } from 'vue';
 import BaseRadio from './BaseRadio.vue';
 
 const fsref: Ref<HTMLFieldSetElement | null> = ref(null);
@@ -49,6 +49,7 @@ type RadioData = {
 const props = defineProps<{
   id: string,
   name: string,
+  legend?: string,
   radios: RadioData[],
   required?: string,
 }>();
@@ -57,7 +58,12 @@ const props = defineProps<{
 </script>
 
 <style scoped>
-  fieldset {
-    padding: 1rem;
-  }
+fieldset {
+  padding: 1rem;
+}
+
+legend {
+  font-size: medium;
+  font-weight: bold;
+}
 </style>
