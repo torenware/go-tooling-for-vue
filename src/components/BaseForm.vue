@@ -1,22 +1,12 @@
 <template>
-  <form
-    class="d-flex flex-column"
-    novalidate
-    @submit.prevent
-    ref="form"
-  >
-  <slot>
+  <form class="d-flex flex-column" novalidate @submit.prevent ref="form">
+    <slot></slot>
 
-  </slot>
-
-  <div class="d-flex justify-content-start">
-      <button id="submitter" class="btn btn-primary mt-3 ms-3">
-        Submit Me!
-      </button>
+    <div class="d-flex justify-content-start">
+      <button id="submitter" class="btn btn-primary mt-3 ms-3">Submit Me!</button>
       <button id="reset-form" class="btn btn-secondary mt-3 ms-3 me-auto">Reset</button>
     </div>
   </form>
-
 </template>
 
 <script setup lang="ts">
@@ -35,11 +25,11 @@ type GatherValueFunc = (form: HTMLFormElement) => JSPO;
 
 const props = withDefaults(defineProps<{
   process?: ProcessSubmitFunc
-    }>(), {
-      process: (obj: JSPO) => {
-        console.log("supply @prop process func taking a JS object to get results of form");
-        console.log(obj);
-      }
+}>(), {
+  process: (obj: JSPO) => {
+    console.log("supply @prop process func taking a JS object to get results of form");
+    console.log(obj);
+  }
 });
 
 
@@ -102,8 +92,11 @@ const checkRadioGroups: GatherValueFunc = (form: HTMLFormElement) => {
 const processSubmit = (form: HTMLFormElement) => {
   const values: JSPO = {};
 
-  // First check validity
-  if (form.reportValidity() && validateRadioGroups(form)) {
+  // First check validity. We want all validators
+  // to run, so we call them individually.
+  const generalValidity = form.reportValidity();
+  const radioGroupValidity = validateRadioGroups(form);
+  if (generalValidity && radioGroupValidity) {
     const elems = form.querySelectorAll("input, select, textarea");
     elems.forEach((elem) => {
       if (elem.tagName === 'INPUT') {
@@ -167,7 +160,6 @@ const form: Ref<HTMLFormElement | null> = ref(null)
 </script>
 
 <style scoped>
-
 label {
   margin: 0 0.5em;
   font-weight: bold;
