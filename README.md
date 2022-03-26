@@ -10,8 +10,7 @@ work with the old Vue 3 build system, but since [Evan You of Vue.js fame](https:
 to write himself the new [Vite build system](https://vitejs.dev/) and loader, I thought it might
 be a good time to try this again.
 
-The actual vue glue code has been separated into a go module, which is
-extremely new. It's marked as "pre-release" because it is: the code is
+The actual vue glue code has been separated into a go module. It's marked as "pre-release" because it is: the code is
 proof of concept, may not be safe, may eat your dog or other family
 members. But it works with the test program in this repo. See it
 [here](https://github.com/torenware/vite-go).
@@ -22,11 +21,11 @@ This test build does the following:
 
 * I've code to analyze a Vite-based dist/ directory, and use Go 1.16 embedding to probe the Vite based assets. I've added template logic to decorate the Go page adding the link, script and style sections to serve the Vite assets with the generated page.
 
-* I have a simple Makefile and vite.config.ts file that rebuilds the Vue 3 app as needed, and runs go via `go run`.
+* I have a Makefile and vite.config.ts file that rebuilds the Vue 3 app as needed, and runs go via `go run`.
 
 * The Vue app is a non-trivial demo of a Vue 3 form with client side validation.
 
-Much obliged to Máximo Mussini (@maximomussini on Twitter), rubist and Vite expert, for his help. I now understand, more or less, how Vite configuration works and how to integrate Vue into frameworks like Rails.  This demo uses an approach inspired by Vite Ruby, a library Máximo designed.
+Much obliged to Máximo Mussini (@maximomussini on Twitter), rubist and Vite expert, for his help. I now understand, more or less, how Vite configuration works and how to integrate Vue into frameworks like Rails.  This demo uses an approach inspired by Vite Ruby, a library Máximo wrote.
 
 --Rob Thorne
 

@@ -9,4 +9,4 @@ go: cmd/web/dist/assets cmd/web/main.go
 	@echo ${JSASSETS}
 	@go run ./cmd/web
 
-rebuild:  go
+build:  go
