@@ -1,34 +1,32 @@
 <template>
-  <div  :class="groupClass" ref="controlBlock">
-    <label
-        v-if="inputType !== 'checkbox'"
-        :for=id
-        class="form-label align-self-start">{{label}}</label>
+  <div :class="groupClass" ref="controlBlock">
+    <label v-if="inputType !== 'checkbox'" :for="id" class="form-label align-self-start">{{ label }}</label>
 
     <input
       v-if="inputType !== 'checkbox'"
-      :id=id
+      :id="id"
       :type="inputType"
       class="form-control"
       :required="required != ''"
       :value="value"
       @invalid="onInvalid"
-    >
+    />
     <input
       v-else
-      :id=id
+      :id="id"
       :type="inputType"
       class="form-check ms-3 pb-2"
       :required="required != ''"
       :value="value"
       @invalid="onInvalid"
-    >
+    />
     <label
-        v-if="inputType === 'checkbox'"
-        :for=id
-        class="form-label checkbox pt-1 align-self-start">{{label}}</label>
+      v-if="inputType === 'checkbox'"
+      :for="id"
+      class="form-label checkbox pt-1 align-self-start"
+    >{{ label }}</label>
 
-    <div class="errors text-danger mt-1 ms-2 pb-1  align-self-start d-none"></div>
+    <div class="errors text-danger mt-1 ms-2 pb-1 align-self-start d-none"></div>
   </div>
 </template>
 
@@ -42,12 +40,12 @@ const onInvalid = () => {
 
 
 const props = withDefaults(defineProps<{
-      label: string,
-      id: string,
-      required?: string,
-      inputType?: string,
-      value?: string,
-    }>(), {
+  label: string,
+  id: string,
+  required?: string,
+  inputType?: string,
+  value?: string,
+}>(), {
   inputType: "text"
 });
 
@@ -97,10 +95,15 @@ onMounted(() => {
 
 <style scoped>
 label.checkbox {
-  margin-left: .3rem;
+  margin-left: 0.3rem;
 }
 label:not(.checkbox) {
   font-weight: bold;
   margin-left: 1rem;
+}
+
+div.errors {
+  font-weight: bold;
+  font-style: italic;
 }
 </style>

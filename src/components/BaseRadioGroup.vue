@@ -66,4 +66,9 @@ legend {
   font-size: medium;
   font-weight: bold;
 }
+
+div.errors {
+  font-weight: bold;
+  font-style: italic;
+}
 </style>
