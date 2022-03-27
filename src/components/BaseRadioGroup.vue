@@ -1,11 +1,18 @@
 <template>
-  <fieldset :id="id" :required="required" class="d-flex flex-column" ref="fsref">
+  <fieldset
+    :id="id"
+    :required="required"
+    class="d-flex flex-column"
+    :class="extraClasses"
+    ref="fsref"
+  >
     <legend v-if="legend">{{ legend }}</legend>
     <BaseRadio
       v-for="radio in radios"
       :name="name"
       :value="radio.value"
       :label="radio.label"
+      :invalid="extraClasses"
       :key="name + '-' + radio.value"
     />
 
@@ -14,16 +21,45 @@
 </template>
 
 <script setup lang="ts">
-import { ref, Ref, onMounted } from 'vue';
+import { ref, Ref, onMounted, onUpdated, computed } from 'vue';
 import BaseRadio from './BaseRadio.vue';
 
 const fsref: Ref<HTMLFieldSetElement | null> = ref(null);
 
+const extraClasses = computed(() => {
+  if (!fsref.value) {
+    return "";
+  }
+  if (props.addedClasses && props.addedClasses.value.has(fsref.value.id)) {
+    return props.addedClasses.value.get(fsref.value.id);
+  }
+});
+
+onUpdated(() => {
+  console.log("updated called");
+  const fs = fsref.value;
+  if (fs && props.addedClasses) {
+    if (props.addedClasses.value.has(fs.id)) {
+      const newClass = props.addedClasses.value.get(fs.id);
+      console.log("updated", newClass);
+    }
+  }
+
+});
+
 onMounted(() => {
+  console.log("mounted");
   if (!fsref.value) {
     return;
   }
   const fs = fsref.value;
+  if (props.addedClasses) {
+    if (props.addedClasses.value.has(fs.id)) {
+      const newClass = props.addedClasses.value.get(fs.id);
+      console.log(newClass);
+    }
+  }
+
   const radioElems = fs.querySelectorAll("input");
   radioElems.forEach(elem => {
     const radio = elem as HTMLInputElement;
@@ -52,6 +88,7 @@ const props = defineProps<{
   legend?: string,
   radios: RadioData[],
   required?: string,
+  addedClasses?: Ref<Map<string, string>>,
 }>();
 
 
@@ -65,6 +102,14 @@ fieldset {
 legend {
   font-size: medium;
   font-weight: bold;
+}
+
+fieldset.invalid label {
+  color: red;
+}
+
+fieldset.invalid legend {
+  color: red;
 }
 
 div.errors {

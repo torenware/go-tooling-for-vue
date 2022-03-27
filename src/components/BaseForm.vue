@@ -1,6 +1,6 @@
 <template>
   <form class="d-flex flex-column" novalidate @submit.prevent ref="form">
-    <slot></slot>
+    <slot :addedClasses="addedClasses"></slot>
 
     <div class="d-flex justify-content-start">
       <button id="submitter" class="btn btn-primary mt-3 ms-3">Submit Me!</button>
@@ -10,7 +10,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, Ref, onMounted } from 'vue'
+import { stringifyStyle } from '@vue/shared';
+import { ref, Ref, onMounted, computed, reactive } from 'vue'
+
+const errorClasses = ref(new Map<string, string>());
+
 
 enum FieldSetState {
   REQUIRED_MISSING = -1
@@ -43,6 +47,7 @@ const validateRadioGroups = (form: HTMLFormElement) => {
 
   for (let fsID of Object.keys(values)) {
     if (values[fsID] === FieldSetState.REQUIRED_MISSING) {
+      errorClasses.value.set(fsID, "invalid");
       const fs = document.getElementById(fsID);
       const errDiv = fs?.querySelector("div.errors");
       if (errDiv) {
@@ -89,8 +94,14 @@ const checkRadioGroups: GatherValueFunc = (form: HTMLFormElement) => {
   return values;
 }
 
+const addedClasses = computed(() => {
+  return errorClasses;
+});
+
+
 const processSubmit = (form: HTMLFormElement) => {
   const values: JSPO = {};
+  errorClasses.value.clear(); //reset.
 
   // First check validity. We want all validators
   // to run, so we call them individually.
@@ -113,6 +124,8 @@ const processSubmit = (form: HTMLFormElement) => {
     });
 
     props.process(values);
+  } else {
+    console.log("not validated");
   }
 }
 

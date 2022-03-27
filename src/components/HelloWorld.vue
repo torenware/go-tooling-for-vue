@@ -30,21 +30,24 @@ function processForm(obj: JSOB) {
 <template>
   <div class="container">
     <BaseForm :process="processForm">
-      <BaseInput label="Email" id="email" inputType="email" required="true" />
-      <BaseInput label="Password" id="password" inputType="password" required="true" />
-      <BaseInput
-        label="Agree To Licence"
-        id="license"
-        value="agreed-to-licence"
-        inputType="checkbox"
-      ></BaseInput>
-      <BaseRadioGroup
-        :radios="rg"
-        id="lone-radio"
-        legend="Radio Stations"
-        name="station"
-        required="true"
-      />
+      <template #default="fromForm">
+        <BaseInput label="Email" id="email" inputType="email" required="true" />
+        <BaseInput label="Password" id="password" inputType="password" required="true" />
+        <BaseInput
+          label="Agree To Licence"
+          id="license"
+          value="agreed-to-licence"
+          inputType="checkbox"
+        ></BaseInput>
+        <BaseRadioGroup
+          :radios="rg"
+          id="lone-radio"
+          legend="Radio Stations"
+          name="station"
+          required="true"
+          :addedClasses="fromForm.addedClasses"
+        />
+      </template>
     </BaseForm>
   </div>
 </template>

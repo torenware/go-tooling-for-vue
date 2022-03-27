@@ -33,6 +33,8 @@
 <script setup lang="ts" >
 import { ref, Ref, onMounted, computed } from 'vue';
 
+const controlInvalid = ref(false);
+
 const onInvalid = () => {
   // console.log(`invalid called for ID=${props.id}`);
   updateErrorBlock(false);
@@ -50,6 +52,7 @@ const props = withDefaults(defineProps<{
 });
 
 const validateItem = () => {
+  controlInvalid.value = false;
   const input = controlBlock.value?.querySelector("input");
   const isValid = input?.checkValidity();
   updateErrorBlock(isValid as boolean);
@@ -60,6 +63,7 @@ const updateErrorBlock = (valid: boolean) => {
   const errorBlock = controlBlock.value?.querySelector("div.errors");
 
   if (!valid) {
+    controlInvalid.value = true;
     const block = errorBlock as HTMLElement;
     block.classList.remove("d-none");
     block.textContent = input?.validationMessage as string;
@@ -74,10 +78,11 @@ const updateErrorBlock = (valid: boolean) => {
 const controlBlock: Ref<HTMLElement | null> = ref(null);
 
 const groupClass = computed<string>(() => {
+  const invalid = controlInvalid.value ? "invalid" : "";
   if (props.inputType === "checkbox") {
-    return "mt-3 d-flex flex-row justify-content-start";
+    return `${invalid} mt-3 d-flex flex-row justify-content-start`;
   } else {
-    return "mt-3 px-3 d-flex flex-column";
+    return `${invalid} mt-3 px-3 d-flex flex-column`;
   }
 });
 
@@ -100,6 +105,14 @@ label.checkbox {
 label:not(.checkbox) {
   font-weight: bold;
   margin-left: 1rem;
+}
+
+div.invalid label {
+  color: red;
+}
+
+div.invalid input {
+  background-color: rgba(230, 139, 166, 0.2);
 }
 
 div.errors {
