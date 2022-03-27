@@ -98,6 +98,13 @@ const addedClasses = computed(() => {
   return errorClasses;
 });
 
+// handle special case of input buttons resetting
+const sendReset = (elem: Element) => {
+  const evt = new CustomEvent("spReset");
+  const rslt = elem.dispatchEvent(evt);
+  console.log("dispatched spReset with ret of", rslt);
+}
+
 
 const processSubmit = (form: HTMLFormElement) => {
   const values: JSPO = {};
@@ -140,14 +147,16 @@ onMounted(() => {
   const reset = ourForm.querySelector("#reset-form") as HTMLFormElement;
   reset.addEventListener("click", () => {
     reset.form.reset();
+    errorClasses.value.clear();
 
     // make the button unselect itself
     reset.blur();
 
     const elems = reset.form.querySelectorAll("input, select, textarea");
     elems.forEach((elem: Element) => {
-
+      sendReset(elem);
       let parent = elem.parentElement;
+
       // radio button groups are one level more nested.
       if (elem.tagName.toLowerCase() === "input") {
         const input = elem as HTMLInputElement;

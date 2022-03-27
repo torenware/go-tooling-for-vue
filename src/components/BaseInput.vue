@@ -40,6 +40,11 @@ const onInvalid = () => {
   updateErrorBlock(false);
 }
 
+const onReset = () => {
+  console.log("reset triggered");
+  controlInvalid.value = false;
+}
+
 
 const props = withDefaults(defineProps<{
   label: string,
@@ -68,6 +73,7 @@ const updateErrorBlock = (valid: boolean) => {
     block.classList.remove("d-none");
     block.textContent = input?.validationMessage as string;
   } else {
+    controlInvalid.value = false;
     if (!errorBlock?.classList.contains("d-none")) {
       errorBlock?.classList.add("d-none");
     }
@@ -94,6 +100,10 @@ onMounted(() => {
   input?.addEventListener("blur", evt => {
     validateItem();
   });
+
+  // Handle a standard CustomEvent of spReset, since
+  // it appears the standard event handling ignores CustomEvents.
+  input?.addEventListener("spReset", onReset);
 });
 
 </script>
