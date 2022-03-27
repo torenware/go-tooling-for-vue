@@ -9,6 +9,7 @@
     <legend v-if="legend">{{ legend }}</legend>
     <BaseRadio
       v-for="radio in radios"
+      :id="id + '-' + radio.value"
       :name="name"
       :value="radio.value"
       :label="radio.label"
@@ -90,7 +91,7 @@ fieldset.invalid label {
 }
 
 fieldset.invalid legend {
-  color: red;
+  color: #dc3545;
 }
 
 div.errors {

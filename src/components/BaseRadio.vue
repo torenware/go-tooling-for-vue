@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex radio" :class="invalid">
-    <input type="radio" :name="name" :value="value" />
-    <label>{{ label }}</label>
+    <input :id="id" type="radio" :name="name" :value="value" />
+    <label :for="id">{{ label }}</label>
   </div>
 </template>
 
@@ -9,6 +9,7 @@
 import { computed } from 'vue';
 
 const props = defineProps<{
+  id: string,
   label: string,
   value: string,
   name: string,
@@ -23,6 +24,6 @@ input[type="radio"] {
 }
 
 div.invalid label {
-  color: red;
+  color: #dc3545;
 }
 </style>

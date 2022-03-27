@@ -116,7 +116,7 @@ label:not(.checkbox) {
 }
 
 div.invalid label {
-  color: red;
+  color: #dc3545;
 }
 
 div.invalid input {
