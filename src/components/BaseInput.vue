@@ -36,12 +36,10 @@ import { ref, Ref, onMounted, computed } from 'vue';
 const controlInvalid = ref(false);
 
 const onInvalid = () => {
-  // console.log(`invalid called for ID=${props.id}`);
   updateErrorBlock(false);
 }
 
 const onReset = () => {
-  console.log("reset triggered");
   controlInvalid.value = false;
 }
 

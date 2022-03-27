@@ -35,31 +35,12 @@ const extraClasses = computed(() => {
   }
 });
 
-onUpdated(() => {
-  console.log("updated called");
-  const fs = fsref.value;
-  if (fs && props.addedClasses) {
-    if (props.addedClasses.value.has(fs.id)) {
-      const newClass = props.addedClasses.value.get(fs.id);
-      console.log("updated", newClass);
-    }
-  }
-
-});
 
 onMounted(() => {
-  console.log("mounted");
   if (!fsref.value) {
     return;
   }
   const fs = fsref.value;
-  if (props.addedClasses) {
-    if (props.addedClasses.value.has(fs.id)) {
-      const newClass = props.addedClasses.value.get(fs.id);
-      console.log(newClass);
-    }
-  }
-
   const radioElems = fs.querySelectorAll("input");
   radioElems.forEach(elem => {
     const radio = elem as HTMLInputElement;

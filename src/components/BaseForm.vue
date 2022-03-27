@@ -102,7 +102,6 @@ const addedClasses = computed(() => {
 const sendReset = (elem: Element) => {
   const evt = new CustomEvent("spReset");
   const rslt = elem.dispatchEvent(evt);
-  console.log("dispatched spReset with ret of", rslt);
 }
 
 
@@ -131,8 +130,6 @@ const processSubmit = (form: HTMLFormElement) => {
     });
 
     props.process(values);
-  } else {
-    console.log("not validated");
   }
 }
 
