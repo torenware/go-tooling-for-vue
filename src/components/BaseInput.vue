@@ -35,7 +35,10 @@ import { ref, Ref, onMounted, computed } from 'vue';
 
 //const controlInvalid = ref(false);
 
-const onInvalid = () => {
+const onInvalid = (evt: Event) => {
+  // Stop the default browser UI from
+  // popping up, since it ignores novalidate.
+  evt.preventDefault();
   updateErrorBlock(false);
 }
 

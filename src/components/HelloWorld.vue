@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import BaseInput from './BaseInput.vue';
 import BaseForm from './BaseForm.vue';
-//import BaseRadio from './BaseRadio.vue';
 import BaseRadioGroup from './BaseRadioGroup.vue';
-
-// import {ref} from 'vue';
 
 const rg = [
   {
@@ -25,6 +22,7 @@ function processForm(obj: JSOB) {
   console.log("Password as well");
   console.log(obj);
 }
+
 </script>
 
 <template>

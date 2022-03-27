@@ -136,6 +136,13 @@ const processSubmit = (form: HTMLFormElement) => {
 onMounted(() => {
   const ourForm = form.value as HTMLFormElement;
   const btn = ourForm.querySelector("button");
+
+  ourForm.addEventListener("userChange", evt => {
+    if (validateRadioGroups(ourForm)) {
+      errorClasses.value.clear();
+    }
+  });
+
   btn?.addEventListener("click", () => {
     const form = btn.form as HTMLFormElement;
     processSubmit(form);

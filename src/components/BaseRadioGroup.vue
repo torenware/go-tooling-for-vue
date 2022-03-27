@@ -2,11 +2,11 @@
   <fieldset
     :id="id"
     :required="required"
-    class="d-flex flex-column"
+    class="d-flex flex-column justify-content-start"
     :class="extraClasses"
     ref="fsref"
   >
-    <legend v-if="legend">{{ legend }}</legend>
+    <legend v-if="legend" class="mb-3">{{ legend }}</legend>
     <BaseRadio
       v-for="radio in radios"
       :id="id + '-' + radio.value"
@@ -27,38 +27,6 @@ import BaseRadio from './BaseRadio.vue';
 
 const fsref: Ref<HTMLFieldSetElement | null> = ref(null);
 
-const extraClasses = computed(() => {
-  if (!fsref.value) {
-    return "";
-  }
-  if (props.addedClasses && props.addedClasses.value.has(fsref.value.id)) {
-    return props.addedClasses.value.get(fsref.value.id);
-  }
-});
-
-
-onMounted(() => {
-  if (!fsref.value) {
-    return;
-  }
-  const fs = fsref.value;
-  const radioElems = fs.querySelectorAll("input");
-  radioElems.forEach(elem => {
-    const radio = elem as HTMLInputElement;
-    radio.addEventListener("change", () => {
-      if (radio.checked) {
-        const errBlock = fsref.value?.querySelector("div.errors");
-        if (errBlock) {
-          const block = errBlock as HTMLDivElement;
-          if (!block.classList.contains("d-none")) {
-            block.classList.add("d-none");
-          }
-        }
-      }
-    });
-  })
-});
-
 type RadioData = {
   label: string,
   value: string,
@@ -73,6 +41,43 @@ const props = defineProps<{
   addedClasses?: Ref<Map<string, string>>,
 }>();
 
+const extraClasses = computed(() => {
+  if (!fsref.value) {
+    return "";
+  }
+  if (props.addedClasses && props.addedClasses.value.has(fsref.value.id)) {
+    return props.addedClasses.value.get(fsref.value.id);
+  }
+});
+
+const sendUserEvent = (form: HTMLFormElement) => {
+  const evt = new CustomEvent("userChange");
+  const rslt = form.dispatchEvent(evt);
+};
+
+onMounted(() => {
+  if (!fsref.value) {
+    return;
+  }
+  const fs = fsref.value;
+  const radioElems = fs.querySelectorAll("input");
+  radioElems.forEach(elem => {
+    const radio = elem as HTMLInputElement;
+    radio.addEventListener("change", () => {
+      if (radio.checked) {
+        sendUserEvent(fs.form!);
+        const errBlock = fsref.value?.querySelector("div.errors");
+        if (errBlock) {
+          const block = errBlock as HTMLDivElement;
+          if (!block.classList.contains("d-none")) {
+            block.classList.add("d-none");
+          }
+        }
+      }
+    });
+  })
+});
+
 
 </script>
 
@@ -84,6 +89,7 @@ fieldset {
 legend {
   font-size: medium;
   font-weight: bold;
+  text-align: left;
 }
 
 fieldset.invalid label {
