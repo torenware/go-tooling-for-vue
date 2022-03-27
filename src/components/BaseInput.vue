@@ -33,14 +33,15 @@
 <script setup lang="ts" >
 import { ref, Ref, onMounted, computed } from 'vue';
 
-const controlInvalid = ref(false);
+//const controlInvalid = ref(false);
 
 const onInvalid = () => {
   updateErrorBlock(false);
 }
 
 const onReset = () => {
-  controlInvalid.value = false;
+  setInvalidClass(false);
+  // controlInvalid.value = false;
 }
 
 
@@ -55,10 +56,19 @@ const props = withDefaults(defineProps<{
 });
 
 const validateItem = () => {
-  controlInvalid.value = false;
+  //controlInvalid.value = false;
   const input = controlBlock.value?.querySelector("input");
   const isValid = input?.checkValidity();
   updateErrorBlock(isValid as boolean);
+}
+
+const setInvalidClass = (isInvalid: boolean) => {
+  const classOn = controlBlock.value?.classList.contains("invalid");
+  if (isInvalid && !classOn) {
+    controlBlock.value?.classList.add("invalid");
+  } else if (!isInvalid && classOn) {
+    controlBlock.value?.classList.remove("invalid");
+  }
 }
 
 const updateErrorBlock = (valid: boolean) => {
@@ -66,12 +76,12 @@ const updateErrorBlock = (valid: boolean) => {
   const errorBlock = controlBlock.value?.querySelector("div.errors");
 
   if (!valid) {
-    controlInvalid.value = true;
+    setInvalidClass(true);
     const block = errorBlock as HTMLElement;
     block.classList.remove("d-none");
     block.textContent = input?.validationMessage as string;
   } else {
-    controlInvalid.value = false;
+    setInvalidClass(false);
     if (!errorBlock?.classList.contains("d-none")) {
       errorBlock?.classList.add("d-none");
     }
@@ -82,7 +92,8 @@ const updateErrorBlock = (valid: boolean) => {
 const controlBlock: Ref<HTMLElement | null> = ref(null);
 
 const groupClass = computed<string>(() => {
-  const invalid = controlInvalid.value ? "invalid" : "";
+  // const invalid = controlInvalid.value ? "invalid" : "";
+  const invalid = ""; // temp fix
   if (props.inputType === "checkbox") {
     return `${invalid} mt-3 d-flex flex-row justify-content-start`;
   } else {
