@@ -19,7 +19,11 @@
         <main>
           <p>
           This webapp embeds Vue 3 components, and injects them into
-          pages served by a simple golang web server.  Points in the
+          pages served by a simple golang web server. The code uses
+          <a href="https://github.com/torenware/vite-go">
+            this module, from up on Github
+          </a>.
+          Points in the
           DOM that get "decorated" by Vue are marked with the
           <code>data-entryp</code> attribute, which uses a key
           to indicate which component should get injected to that
@@ -27,7 +31,7 @@
           </p>
 
         {{ if $vue }}
-        <div id="app" data-entryp="app">
+        <div data-entryp="app">
         </div>
             {{ end }}
         </main>
