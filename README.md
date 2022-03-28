@@ -15,15 +15,17 @@ proof of concept, may not be safe, may eat your dog or other family
 members. But it works with the test program in this repo. See it
 [here](https://github.com/torenware/vite-go).
 
+![](./docs/go-tooling-example.png)
+
 This test build does the following:
 
-* I have a simple Go-based web server with a couple of pages implemented.
+* It demonstrates a simple Go-based web server with a couple of pages implemented.
 
-* I've code to analyze a Vite-based dist/ directory, and use Go 1.16 embedding to probe the Vite based assets. I've added template logic to decorate the Go page adding the link, script and style sections to serve the Vite assets with the generated page.
+* It has code that analyzes a Vite-based dist/ directory, and uses Go 1.16 embedding to probe the Vite based assets. There's a bit of template logic to decorate the Go page adding the link, script and style sections to serve the Vite assets with the generated page.
 
-* I have a Makefile and vite.config.ts file that rebuilds the Vue 3 app as needed, and runs go via `go run`.
+* It includes a Makefile and vite.config.ts file that rebuilds the Vue 3 app as needed, and runs go via `go run`.
 
-* The Vue app is a non-trivial demo of a Vue 3 form with client side validation.
+* It integrates a Vue 3 app as a non-trivial demo of a webform with client side validation.
 
 Much obliged to Máximo Mussini (@maximomussini on Twitter), rubist and Vite expert, for his help. I now understand, more or less, how Vite configuration works and how to integrate Vue into frameworks like Rails.  This demo uses an approach inspired by Vite Ruby, a library Máximo wrote.
 
