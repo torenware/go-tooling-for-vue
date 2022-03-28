@@ -27,7 +27,7 @@ function processForm(obj: JSOB) {
 
 <template>
   <div class="container">
-    <BaseForm :process="processForm">
+    <BaseForm :process="processForm" submitText="Login" resetText="Reset">
       <template #default="fromForm">
         <BaseInput label="Email" id="email" inputType="email" required="true" />
         <BaseInput label="Password" id="password" inputType="password" required="true" />

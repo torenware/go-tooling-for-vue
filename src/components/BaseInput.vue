@@ -126,7 +126,7 @@ label.checkbox {
 }
 label:not(.checkbox) {
   font-weight: bold;
-  margin-left: 1rem;
+  margin-left: 0.3rem;
 }
 
 div.invalid label {

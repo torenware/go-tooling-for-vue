@@ -3,8 +3,12 @@
     <slot :addedClasses="addedClasses"></slot>
 
     <div class="d-flex justify-content-start">
-      <button id="submitter" class="btn btn-primary mt-3 ms-3">Submit Me!</button>
-      <button id="reset-form" class="btn btn-secondary mt-3 ms-3 me-auto">Reset</button>
+      <button id="submitter" class="btn btn-primary mt-3 ms-3">{{ submitText }}</button>
+      <button
+        v-if="resetText"
+        id="reset-form"
+        class="btn btn-secondary mt-3 ms-3 me-auto"
+      >{{ resetText }}</button>
     </div>
   </form>
 </template>
@@ -28,12 +32,15 @@ type ProcessSubmitFunc = (obj: JSPO) => void;
 type GatherValueFunc = (form: HTMLFormElement) => JSPO;
 
 const props = withDefaults(defineProps<{
-  process?: ProcessSubmitFunc
+  process?: ProcessSubmitFunc,
+  submitText?: string,
+  resetText?: string,
 }>(), {
   process: (obj: JSPO) => {
     console.log("supply @prop process func taking a JS object to get results of form");
     console.log(obj);
-  }
+  },
+  submitText: "Submit",
 });
 
 
@@ -157,31 +164,22 @@ const processSubmit = (form: HTMLFormElement) => {
   }
 }
 
-onMounted(() => {
-  const ourForm = form.value as HTMLFormElement;
-  const btn = ourForm.querySelector("button");
-
-  ourForm.addEventListener("userChange", evt => {
-    if (validateRadioGroups(ourForm)) {
-      errorClasses.value.clear();
-    }
-  });
-
-  btn?.addEventListener("click", () => {
-    const form = btn.form as HTMLFormElement;
-    processSubmit(form);
-    btn.blur();
-  });
-
-  const reset = ourForm.querySelector("#reset-form") as HTMLFormElement;
+const setupResetBtn = (reset: HTMLButtonElement | null) => {
+  if (!reset || !reset.form) {
+    return;
+  }
+  setupResetBtn(reset);
   reset.addEventListener("click", () => {
-    reset.form.reset();
+    reset.form?.reset();
     errorClasses.value.clear();
 
     // make the button unselect itself
     reset.blur();
 
-    const elems = reset.form.querySelectorAll("input, select, textarea");
+    const elems = reset.form?.querySelectorAll("input, select, textarea");
+    if (!elems) {
+      return;
+    }
     elems.forEach((elem: Element) => {
       sendReset(elem);
       let parent = elem.parentElement;
@@ -203,6 +201,26 @@ onMounted(() => {
       }
     });
   });
+
+}
+
+onMounted(() => {
+  const ourForm = form.value as HTMLFormElement;
+  const btn = ourForm.querySelector("button");
+
+  ourForm.addEventListener("userChange", evt => {
+    if (validateRadioGroups(ourForm)) {
+      errorClasses.value.clear();
+    }
+  });
+
+  btn?.addEventListener("click", () => {
+    const form = btn.form as HTMLFormElement;
+    processSubmit(form);
+    btn.blur();
+  });
+
+  const reset = ourForm.querySelector("#reset-form") as HTMLButtonElement;
 
 });
 
