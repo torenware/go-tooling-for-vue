@@ -104,6 +104,20 @@ const sendReset = (elem: Element) => {
   const rslt = elem.dispatchEvent(evt);
 }
 
+// For checkboxes and radio buttons, find the enclosing fieldset
+const getFieldSet = (elem: Element) => {
+  let currElem = elem;
+  while (currElem.parentElement) {
+    if (currElem.parentElement.tagName.toLowerCase() === "fieldset") {
+      return currElem.parentElement;
+    }
+    currElem = currElem.parentElement;
+  }
+  if (!currElem.parentElement) {
+    return null;
+  }
+}
+
 
 const processSubmit = (form: HTMLFormElement) => {
   const values: JSPO = {};
@@ -118,14 +132,24 @@ const processSubmit = (form: HTMLFormElement) => {
     elems.forEach((elem) => {
       if (elem.tagName === 'INPUT') {
         const input = elem as HTMLInputElement;
-        if (input.type === "radio" && input.checked) {
-          values[input.name] = input.value;
+        // To have their values included, radios must
+        // be enclosed in a fieldset with an ID.
+        if (input.type === "radio") {
+          if (input.checked) {
+            console.log("radio checked", input.name, input.value)
+            const fs = getFieldSet(input);
+            if (fs && fs.id) {
+              values[fs.id] = input.value;
+            }
+          }
+          // radios either checked, or not:
           return;
         }
       }
       // anything else
       if (elem.id) {
         values[elem.id] = (elem as FormControl).value
+        console.log(elem.id, values[elem.id]);
       }
     });
 
@@ -146,6 +170,7 @@ onMounted(() => {
   btn?.addEventListener("click", () => {
     const form = btn.form as HTMLFormElement;
     processSubmit(form);
+    btn.blur();
   });
 
   const reset = ourForm.querySelector("#reset-form") as HTMLFormElement;
