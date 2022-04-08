@@ -2,7 +2,6 @@ package main
 
 import (
 	"embed"
-	"encoding/gob"
 	"fmt"
 	"log"
 	"net/http"
@@ -10,8 +9,6 @@ import (
 	"time"
 
 	vueglue "github.com/torenware/vite-go"
-	// "github.com/vearutop/statigz"
-	// "github.com/vearutop/statigz/brotli"
 )
 
 //go:embed dist
@@ -35,7 +32,7 @@ var app *application
 func initConfig() config {
 	var config config
 	config.port = 4000
-	config.env = "development"
+	config.env = "production"
 	return config
 }
 
@@ -57,10 +54,14 @@ func (app *application) serve() error {
 
 func main() {
 
-	// support vue fields in templates.
-	gob.Register(vueglue.VueGlue{})
+	config := &vueglue.ViteConfig{
+		Environment: "production",
+		FS:          dist,
+		AssetsPath:  "dist",
+		URLPrefix:   "/src/",
+	}
 
-	glue, err := vueglue.NewVueGlue(&dist, "dist")
+	glue, err := vueglue.NewVueGlue(config)
 	if err != nil {
 		fmt.Println(err)
 		return
